@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
-NAME="$1"
-ACTION="$2"
+ACTION="$1" # Action to perform
+NAME="$2" # Name of the container
 
-BASE_DIR="$HOME"
 GITHUB_DIR="$HOME/personal/github"
 CONTRIB_DIR="$HOME/work/contrib"
+PROJECT_DIR="$HOME/work/project"
+SSH_DIR="$HOME/.ssh"
+CACHE_DIR="$HOME/.cache/container_cache"
+CONFIG_DIR="$HOME/.config"
+PIP_CACHE_DIR="$CACHE_DIR/$NAME/pip" # Each container must have it's own cache dir
 
 IMAGE_PREFIX="dev"
 CONTAINER="$IMAGE_PREFIX-$NAME"
@@ -15,11 +19,14 @@ IMAGE="$IMAGE_PREFIX-$NAME:latest"
 COMMON_ARGS=(
   --userns=keep-id
   --security-opt=label=disable
+  --device=/dev/snd 
+  --device=/dev/kfd 
   --device=/dev/dri
-  -v "$GITHUB_DIR:/workspace/github"
-  -v "$CONTRIB_DIR:/workspace/contrib"
-  -v "$HOME/.cache/dev/pip:/home/dev/.cache/pip"
-  -v "$HOME/.cache/dev/venv:/home/dev/.venv"
+  -v "$GITHUB_DIR:/home/pydevc/personal/github:z"
+  -v "$CONTRIB_DIR:/home/pydevc/work/contrib:z"
+  -v "$PROJECT_DIR:/home/pydevc/work/project:z"
+  -v "$SSH_DIR:/home/pydevc/.ssh:Z"
+  -v "$CONFIG_DIR:/home/pydevc/.config:z"
 )
 
 usage() {
@@ -44,7 +51,7 @@ case "$ACTION" in
     podman run -d \
       --name "$CONTAINER" \
       "${COMMON_ARGS[@]}" \
-      "$IMAGE" sleep infinity
+      "localhost/$IMAGE" sleep infinity
     ;;
 
   shell)
