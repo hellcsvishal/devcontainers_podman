@@ -42,6 +42,8 @@ case "$ACTION" in
   up)
     podman container exists "$CONTAINER" && {
       echo "[+] Container already exists: $CONTAINER"
+      podman start $CONTAINER
+      echo "[+] Container Started: $CONTAINER"
       exit 0
     }
 
@@ -53,7 +55,11 @@ case "$ACTION" in
     ;;
 
   shell)
-    podman exec -it "$CONTAINER" bash
+    if [[ "$(podman inspect -f '{{.State.Running}}' "$CONTAINER" 2>/dev/null)" == "true" ]]; then
+        podman exec -it -u pydevc "$CONTAINER" bash
+    else
+        echo "[!] Container $CONTAINER is not running. Try 'up' first."
+    fi
     ;;
 
   stop)
