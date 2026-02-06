@@ -16,6 +16,7 @@ ENV HOME="/home/pydevc"
 RUN mkdir $HOME/personal
 RUN mkdir $HOME/work
 RUN git clone https://github.com/PyDevC/trench /home/pydevc/trench
+RUN git clone https://github.com/PyDevC/pytorch_dev_env_setup /home/pydevc/pytorch_dev_env_setup
 
 
 RUN RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
