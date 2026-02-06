@@ -9,18 +9,16 @@ if [[ "$BASE_NAME" == "baseubuntu" ]]; then
     podman exec baseubuntu userdel -r ubuntu
     podman exec baseubuntu useradd -u 1000 -m -s /bin/bash pydevc
     podman exec -it baseubuntu passwd pydevc
-    podman exec baseubuntu apt update -y && apt install git sudo -y
+    podman exec baseubuntu apt update -y && apt install sudo -y
     podman exec baseubuntu usermod -aG sudo pydevc
     podman exec baseubuntu groups pydevc
-    podman exec baseubuntu git clone https://github.com/PyDevC/trench /home/pydevc/
     podman commit baseubuntu baseubuntu
 elif [[ "$BASE_NAME" == "basefedora" ]]; then
     podman run -d --name basefedora fedora:42 sleep infinity
     podman exec basefedora useradd -m pydevc
     podman exec -it basefedora passwd pydevc
-    podman exec basefedora dnf update -y && dnf install git sudo -y
+    podman exec basefedora dnf update -y && dnf install sudo -y
     podman exec basefedora usermod -aG wheel pydevc
     podman exec basefedora groups pydevc
-    podman exec basefedora git clone https://github.com/PyDevC/trench /home/pydevc/
     podman commit basefedora basefedora
 fi
