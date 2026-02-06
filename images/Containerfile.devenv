@@ -1,8 +1,10 @@
 FROM basefedora
 
-RUN dnf update -y && apt install -y \
-    python3 python3-pip python3-venv \
-    git curl wget bash zsh tmux wheel vim
+RUN echo "max_parallel_downloads=10" >> /etc/dnf/dnf.conf && \
+    echo "fastestmirror=True" >> /etc/dnf/dnf.conf
+
+RUN dnf update -y && dnf install -y \
+    python3 git curl wget bash zsh tmux wheel vim
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -15,7 +17,7 @@ ENV HOME="/home/pydevc"
 
 RUN mkdir $HOME/personal
 RUN mkdir $HOME/work
-RUN git clone https://github.com/PyDevC/trench
+RUN git clone https://github.com/PyDevC/trench /home/pydevc/trench
 
 
 RUN RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
