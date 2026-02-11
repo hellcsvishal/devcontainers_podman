@@ -1,9 +1,8 @@
 FROM baseubuntu
 
 RUN apt update && apt install -y \
-    python3 python3-pip python3-venv \
-    git curl wget ca-certificates \
-    bash zsh tmux sudo vim
+    python3 git curl wget ca-certificates \
+    bash zsh tmux sudo vim language-pack-en
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -16,7 +15,8 @@ ENV HOME="/home/pydevc"
 
 RUN mkdir $HOME/personal
 RUN mkdir $HOME/work
-RUN git clone https://github.com/PyDevC/trench
+RUN git clone https://github.com/PyDevC/trench /home/pydevc/trench
+RUN git clone https://github.com/PyDevC/pytorch_dev_env_setup /home/pydevc/pytorch_dev_env_setup
 
 
 RUN RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

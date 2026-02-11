@@ -2,14 +2,6 @@
 
 BASE_NAME="base$1" # base name of the container ex: basefedora
 
-usage() {
-  echo "Usage:"
-  echo "  $0 up <devenv|pytorch|llvm>"
-  echo "  $0 shell <devenv|pytorch|llvm>"
-  echo "  $0 stop <devenv|pytorch|llvm>"
-  exit 1
-}
-
 echo "Building $BASE_NAME ...."
 
 if [[ "$BASE_NAME" == "baseubuntu" ]]; then
@@ -25,7 +17,7 @@ elif [[ "$BASE_NAME" == "basefedora" ]]; then
     podman run -d --name basefedora fedora:42 sleep infinity
     podman exec basefedora useradd -m pydevc
     podman exec -it basefedora passwd pydevc
-    podman exec basefedora dnf update -y && dnf install git sudo -y
+    podman exec basefedora dnf update -y && dnf install sudo -y
     podman exec basefedora usermod -aG wheel pydevc
     podman exec basefedora groups pydevc
     podman commit basefedora basefedora

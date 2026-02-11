@@ -11,9 +11,9 @@
 - llvm     → LLVM / compiler work
 
 ## Mounted directories
-- ~/personal/github → container:~/personal/github
-- ~/work/contrib    → container:~/work/contrib
-- ~/work/project    → container:~/work/project
+- "$HOME/personal/github" → "container:$HOME/personal/github"
+- "$HOME/work/contrib" → "container:$HOME/work/contrib"
+- "$HOME/work/project" → "container:$HOME/work/project"
 
 ## Usage
 

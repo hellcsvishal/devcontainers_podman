@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail # Added 'u' to error on unset vars and 'o pipefail' for better error catching
 
-ACTION="$1" # Action to perform
-NAME="$2" # Name of the container
+ACTION="${1:-}" # Action to perform
+NAME="${2:-}"   # Name of the container
+
+echo $ACTION
+echo $NAME
 
 BASE_PERSONAL_DIR="$HOME/personal" # Do not mount this directory
 BASE_WORK_DIR="$HOME/work" # Do not mount this directory
@@ -10,6 +13,7 @@ GITHUB_DIR="$BASE_PERSONAL_DIR/github"
 CONTRIB_DIR="$BASE_WORK_DIR/contrib"
 PROJECT_DIR="$BASE_WORK_DIR/project"
 CONFIG_DIR="$HOME/.config"
+GIT_CONFIG="$HOME/.gitconfig"
 
 IMAGE_PREFIX="dev"
 CONTAINER="$IMAGE_PREFIX-$NAME"
@@ -21,10 +25,13 @@ COMMON_ARGS=(
   --device=/dev/snd 
   --device=/dev/kfd 
   --device=/dev/dri
+  --shm-size=8g
+  --memory=30g
   -v "$GITHUB_DIR:/home/pydevc/personal/github:z"
   -v "$CONTRIB_DIR:/home/pydevc/work/contrib:z"
   -v "$PROJECT_DIR:/home/pydevc/work/project:z"
   -v "$CONFIG_DIR:/home/pydevc/.config:z"
+  -v "$GIT_CONFIG:/home/pydevc/.gitconfig:z"
 )
 
 usage() {
@@ -35,7 +42,6 @@ usage() {
   exit 1
 }
 
-[ -z "$NAME" ] && usage
 [ -z "$ACTION" ] && usage
 
 case "$ACTION" in
@@ -66,8 +72,11 @@ case "$ACTION" in
     podman stop "$CONTAINER"
     ;;
 
-  *)
-    usage
+    *)
+    # The "Wrapper" Logic:
+    # If the command isn't up/shell/stop, pass everything directly to podman.
+    echo "[→] Passing to podman: podman $@"
+    exec podman "$@"
     ;;
 esac
 
